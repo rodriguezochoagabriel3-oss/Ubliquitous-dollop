@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plantas Medicinales — Herbario Natural</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --verde-oscuro: #1a3a2a;
+    --verde-medio: #2d5e3e;
+    --verde-claro: #4a8c5c;
+    --crema: #f5f0e8;
+    --dorado: #c9a84c;
+    --tierra: #8b6914;
+    --blanco: #fdfaf4;
+    --sombra: rgba(26,58,42,0.18);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background-color: var(--verde-oscuro);
+    color: var(--crema);
+    font-family: 'Lato', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Textura de fondo */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(circle at 20% 30%, rgba(74,140,92,0.12) 0%, transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(45,94,62,0.18) 0%, transparent 50%),
+      url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%234a8c5c' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  header {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 70px 20px 40px;
+    border-bottom: 1px solid rgba(201,168,76,0.3);
+  }
+
+  .header-badge {
+    display: inline-block;
+    font-size: 0.7rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--dorado);
+    border: 1px solid var(--dorado);
+    padding: 5px 18px;
+    margin-bottom: 24px;
+    border-radius: 2px;
+  }
+
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.6rem, 6vw, 4.5rem);
+    line-height: 1.1;
+    color: var(--blanco);
+    margin-bottom: 14px;
+  }
+
+  header h1 em {
+    color: var(--dorado);
+    font-style: italic;
+  }
+
+  header p {
+    font-size: 1rem;
+    color: rgba(245,240,232,0.65);
+    max-width: 520px;
+    margin: 0 auto;
+    font-weight: 300;
+    line-height: 1.7;
+  }
+
+  /* Hojas decorativas header */
+  .leaf-deco {
+    position: absolute;
+    opacity: 0.08;
+    font-size: 120px;
+    pointer-events: none;
+  }
+  .leaf-deco.left  { left: -20px; top: 20px; transform: rotate(-30deg); }
+  .leaf-deco.right { right: -20px; bottom: 10px; transform: rotate(40deg); }
+
+  /* Buscador */
+  .search-wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 420px;
+    margin: 36px auto 0;
+  }
+  .search-wrap input {
+    width: 100%;
+    padding: 13px 20px 13px 46px;
+    border-radius: 50px;
+    border: 1px solid rgba(201,168,76,0.4);
+    background: rgba(255,255,255,0.06);
+    color: var(--crema);
+    font-family: 'Lato', sans-serif;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border 0.3s;
+  }
+  .search-wrap input::placeholder { color: rgba(245,240,232,0.4); }
+  .search-wrap input:focus { border-color: var(--dorado); }
+  .search-wrap .icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.1rem;
+    pointer-events: none;
+  }
+
+  /* Grid */
+  .grid-section {
+    position: relative;
+    z-index: 1;
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 60px 24px 80px;
+  }
+
+  .section-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--dorado);
+    margin-bottom: 32px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 28px;
+  }
+
+  /* Tarjeta */
+  .card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(201,168,76,0.15);
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.35s cubic-bezier(.22,.68,0,1.2), box-shadow 0.35s, border-color 0.3s;
+    position: relative;
+    animation: fadeUp 0.5s ease both;
+  }
+  .card:hover {
+    transform: translateY(-8px) scale(1.025);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.45), 0 0 0 1px rgba(201,168,76,0.4);
+    border-color: rgba(201,168,76,0.5);
+  }
+  .card:hover .card-hint { opacity: 1; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .card-img {
+    width: 100%;
+    height: 190px;
+    object-fit: cover;
+    display: block;
+    filter: saturate(0.85) brightness(0.92);
+    transition: filter 0.4s, transform 0.4s;
+  }
+  .card:hover .card-img {
+    filter: saturate(1.1) brightness(1.0);
+    transform: scale(1.05);
+  }
+
+  .card-img-wrap {
+    overflow: hidden;
+    position: relative;
+  }
+
+  .card-hint {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: var(--dorado);
+    color: var(--verde-oscuro);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 50px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .card-body {
+    padding: 18px 18px 20px;
+  }
+
+  .card-tag {
+    font-size: 0.62rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--dorado);
+    margin-bottom: 6px;
+  }
+
+  .card-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    color: var(--blanco);
+    margin-bottom: 4px;
+  }
+
+  .card-latin {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 0.8rem;
+    color: rgba(245,240,232,0.4);
+    margin-bottom: 10px;
+  }
+
+  .card-desc {
+    font-size: 0.82rem;
+    color: rgba(245,240,232,0.6);
+    line-height: 1.6;
+  }
+
+  /* Modal */
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10,26,18,0.85);
+    backdrop-filter: blur(8px);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s;
+  }
+  .overlay.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .modal {
+    background: #1e3d2a;
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 20px;
+    max-width: 780px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    transform: translateY(40px) scale(0.97);
+    transition: transform 0.4s cubic-bezier(.22,.68,0,1.2);
+    box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+    scrollbar-width: thin;
+    scrollbar-color: var(--dorado) transparent;
+  }
+  .overlay.open .modal {
+    transform: translateY(0) scale(1);
+  }
+
+  .modal-header {
+    position: relative;
+    height: 280px;
+    overflow: hidden;
+    border-radius: 20px 20px 0 0;
+  }
+  .modal-header img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.6);
+  }
+  .modal-header-text {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 30px 32px 24px;
+    background: linear-gradient(transparent, rgba(10,26,18,0.9));
+  }
+  .modal-tag {
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--dorado);
+    margin-bottom: 8px;
+  }
+  .modal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    color: var(--blanco);
+    line-height: 1.1;
+  }
+  .modal-latin {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    color: rgba(245,240,232,0.5);
+    font-size: 0.9rem;
+    margin-top: 4px;
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 16px; right: 16px;
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.5);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: white;
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+    z-index: 10;
+  }
+  .modal-close:hover { background: rgba(201,168,76,0.7); }
+
+  .modal-body {
+    padding: 32px 32px 40px;
+  }
+
+  .modal-section {
+    margin-bottom: 28px;
+  }
+
+  .modal-section-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.68rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--dorado);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(201,168,76,0.2);
+  }
+
+  .modal-section p {
+    font-size: 0.95rem;
+    line-height: 1.75;
+    color: rgba(245,240,232,0.82);
+  }
+
+  .benefits-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 4px;
+  }
+  .benefit-tag {
+    background: rgba(74,140,92,0.25);
+    border: 1px solid rgba(74,140,92,0.5);
+    color: #9fd6aa;
+    font-size: 0.78rem;
+    padding: 5px 14px;
+    border-radius: 50px;
+  }
+
+  .recipe-box {
+    background: rgba(0,0,0,0.2);
+    border-left: 3px solid var(--dorado);
+    border-radius: 0 10px 10px 0;
+    padding: 16px 20px;
+    margin-top: 8px;
+  }
+  .recipe-box .recipe-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    color: var(--dorado);
+    margin-bottom: 8px;
+  }
+  .recipe-box p {
+    font-size: 0.875rem;
+    line-height: 1.7;
+    color: rgba(245,240,232,0.72);
+  }
+
+  .uses-list {
+    list-style: none;
+    margin-top: 4px;
+  }
+  .uses-list li {
+    display: flex;
+    gap: 10px;
+    font-size: 0.9rem;
+    color: rgba(245,240,232,0.78);
+    margin-bottom: 8px;
+    line-height: 1.5;
+  }
+  .uses-list li::before {
+    content: '🌿';
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* No results */
+  .no-results {
+    text-align: center;
+    padding: 60px 20px;
+    color: rgba(245,240,232,0.4);
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-style: italic;
+    display: none;
+  }
+
+  footer {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 30px 20px 40px;
+    border-top: 1px solid rgba(201,168,76,0.15);
+    font-size: 0.78rem;
+    color: rgba(245,240,232,0.3);
+    letter-spacing: 0.05em;
+  }
+
+  @media (max-width: 600px) {
+    .modal-body { padding: 22px 20px 32px; }
+    .modal-title { font-size: 1.5rem; }
+    .grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="leaf-deco left">🌿</span>
+  <span class="leaf-deco right">🍃</span>
+  <div class="header-badge">Herbario Natural</div>
+  <h1>Plantas <em>Medicinales</em></h1>
+  <p>Descubre el poder curativo de la naturaleza. Haz clic sobre cualquier planta para ver sus propiedades, usos y recetas.</p>
+  <div class="search-wrap">
+    <span class="icon">🔍</span>
+    <input type="text" id="searchInput" placeholder="Buscar planta…">
+  </div>
+</header>
+
+<section class="grid-section">
+  <div class="section-label">— Colección de plantas —</div>
+  <div class="grid" id="grid"></div>
+  <div class="no-results" id="noResults">No se encontraron plantas con ese nombre.</div>
+</section>
+
+<!-- Modal -->
+<div class="overlay" id="overlay">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <img id="modalImg" src="" alt="">
+      <div class="modal-header-text">
+        <div class="modal-tag" id="modalTag"></div>
+        <div class="modal-title" id="modalTitle"></div>
+        <div class="modal-latin" id="modalLatin"></div>
+      </div>
+      <button class="modal-close" id="modalClose">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<footer>
+  © 2026 Herbario Natural · Solo con fines informativos · Consulta siempre a un profesional de salud
+</footer>
+
+<script>
+const plantas = [
+  {
+    nombre: "Manzanilla",
+    latin: "Matricaria chamomilla",
+    categoria: "Digestiva · Calmante",
+    img: "https://media.istockphoto.com/id/474487980/es/foto/infusi%C3%B3n-de-manzanilla.jpg?s=612x612&w=0&k=20&c=lMrwYKHg-DziecaUVDa9IKGWv9pYHu83Xtsj_1QB__U=",
+    desc: "Flor delicada con poderosas propiedades antiinflamatorias y digestivas.",
+    definicion: "La manzanilla es una planta herbácea anual de la familia Asteraceae, reconocida por sus pequeñas flores blancas con centro amarillo. Es una de las plantas medicinales más antiguas y estudiadas del mundo, empleada durante siglos en la medicina tradicional europea.",
+    beneficios: ["Antiinflamatoria","Digestiva","Calmante","Antiespasmódica","Ansiolítica","Cicatrizante"],
+    usos: [
+      "Aliviar dolores de estómago, náuseas y cólicos intestinales.",
+      "Reducir la ansiedad y mejorar la calidad del sueño.",
+      "Aplicar en piel irritada, eccemas o heridas superficiales.",
+      "Aliviar dolores menstruales y espasmos uterinos.",
+      "Uso oftálmico suave para lavar ojos irritados."
+    ],
+    recetas: [
+      { nombre: "Infusión clásica para el estrés", pasos: "Añade 1 cucharada de flores secas de manzanilla a una taza con agua hirviendo. Cubre y deja reposar 10 minutos. Cuela y bebe lentamente antes de dormir. Puedes añadir una cucharadita de miel." },
+      { nombre: "Compresas para piel irritada", pasos: "Prepara una infusión doble (2 cucharadas por taza). Deja enfriar completamente. Empapa un paño limpio y aplica sobre la zona afectada durante 15-20 minutos, 2 veces al día." }
+    ]
+  },
+  {
+    nombre: "Lavanda",
+    latin: "Lavandula angustifolia",
+    categoria: "Relajante · Antiséptica",
+    img: "https://static.vecteezy.com/system/resources/thumbnails/005/919/060/small/bunch-of-lavender-photo.jpg",
+    desc: "Aroma inconfundible con efectos sedantes, cicatrizantes y antibacterianos.",
+    definicion: "La lavanda es un arbusto aromático perenne de la familia Lamiaceae, originaria del Mediterráneo. Su aceite esencial es uno de los más versátiles y empleados en aromaterapia y medicina natural, con propiedades demostradas científicamente.",
+    beneficios: ["Sedante","Antiséptica","Cicatrizante","Antifúngica","Analgésica","Antiinflamatoria"],
+    usos: [
+      "Reducir el estrés, la ansiedad y favorecer el sueño profundo.",
+      "Desinfectar cortes, quemaduras leves y picaduras de insectos.",
+      "Aliviar dolores de cabeza y migrañas por aplicación tópica.",
+      "Tratar hongos en la piel y pie de atleta.",
+      "Combatir acné y piel grasa por sus propiedades antisépticas."
+    ],
+    recetas: [
+      { nombre: "Aceite relajante para masajes", pasos: "Mezcla 30 ml de aceite de almendras dulces con 15 gotas de aceite esencial de lavanda. Agita bien y aplica con masaje suave en espalda, cuello o sienes antes de dormir." },
+      { nombre: "Bolsita aromática anti-insomnio", pasos: "Llena una bolsita de tela con flores secas de lavanda (3-4 cucharadas). Añade 5 gotas de aceite esencial. Coloca bajo la almohada o en el cajón de ropa. Renueva el aceite cada 2 semanas." }
+    ]
+  },
+  {
+    nombre: "Jengibre",
+    latin: "Zingiber officinale",
+    categoria: "Digestiva · Antiinflamatoria",
+    img: "https://t3.ftcdn.net/jpg/16/02/15/34/360_F_1602153401_SM0MO0awAh6ahqJTMieMJqaj3MTmoIMU.jpg",
+    desc: "Raíz picante con extraordinarias propiedades antiinflamatorias y digestivas.",
+    definicion: "El jengibre es una planta rizomatosa tropical de la familia Zingiberaceae, originaria del sudeste asiático. Su rizoma (raíz) contiene gingeroles y shogaoles, compuestos con potentes efectos antiinflamatorios, antioxidantes y antieméticos avalados por numerosos estudios clínicos.",
+    beneficios: ["Antiemético","Antiinflamatorio","Digestivo","Inmunoestimulante","Analgésico","Antioxidante"],
+    usos: [
+      "Combatir las náuseas, el mareo y los vómitos (embarazo, quimioterapia, viajes).",
+      "Reducir la inflamación en artritis y dolores musculares.",
+      "Mejorar la digestión y combatir la hinchazón abdominal.",
+      "Fortalecer el sistema inmune durante resfriados y gripes.",
+      "Reducir el dolor menstrual de forma natural."
+    ],
+    recetas: [
+      { nombre: "Té de jengibre, limón y miel", pasos: "Pela y ralla 2 cm de jengibre fresco. Coloca en una taza con agua hirviendo y deja reposar 8 minutos. Añade el zumo de medio limón y una cucharadita de miel cruda. Bebe caliente 2-3 veces al día en resfriados." },
+      { nombre: "Cataplasma antiinflamatoria", pasos: "Ralla jengibre fresco abundantemente y extiéndelo sobre un paño delgado. Calienta ligeramente en el microondas (10 segundos). Aplica sobre la zona dolorida (rodilla, espalda) durante 20 minutos. Cubre con otro paño para mantener el calor." }
+    ]
+  },
+  {
+    nombre: "Aloe Vera",
+    latin: "Aloe barbadensis miller",
+    categoria: "Cicatrizante · Hidratante",
+    img: "https://thumbs.dreamstime.com/b/aloe-vera-fresh-leaf-isolated-white-background-141733209.jpg",
+    desc: "El gel de sus hojas es un tesoro natural para la piel y el sistema digestivo.",
+    definicion: "El aloe vera es una planta suculenta de la familia Asphodelaceae, originaria de la Península Arábiga. Sus hojas carnosas almacenan un gel transparente riquísimo en vitaminas, minerales, aminoácidos y polisacáridos con propiedades extraordinarias para la piel y el organismo.",
+    beneficios: ["Cicatrizante","Hidratante","Antibacteriana","Antiinflamatoria","Laxante suave","Inmunomoduladora"],
+    usos: [
+      "Tratar quemaduras solares, irritaciones y eccemas cutáneos.",
+      "Acelerar la cicatrización de heridas y cortes.",
+      "Aliviar el estreñimiento crónico (uso oral con precaución).",
+      "Hidratar profundamente la piel seca y el cuero cabelludo.",
+      "Calmar picaduras de insectos y reacciones alérgicas leves."
+    ],
+    recetas: [
+      { nombre: "Gel calmante para quemaduras", pasos: "Corta una hoja de aloe, extrae el gel con una cuchara y aplica directamente sobre la quemadura o irritación. Deja actuar sin enjuagar. Repite 3-4 veces al día. Guarda el resto en la nevera hasta 5 días." },
+      { nombre: "Mascarilla facial hidratante", pasos: "Mezcla 3 cucharadas de gel de aloe con 1 cucharadita de miel y 5 gotas de aceite de rosa mosqueta. Aplica sobre el rostro limpio durante 20 minutos. Enjuaga con agua tibia. Ideal para pieles secas o dañadas por el sol." }
+    ]
+  },
+  {
+    nombre: "Menta",
+    latin: "Mentha piperita",
+    categoria: "Digestiva · Refrescante",
+    img: "https://img.freepik.com/fotos-premium/hojas-menta-gotas-agua-aisladas_118124-168743.jpg?semt=ais_hybrid&w=740&q=80",
+    desc: "El frescor del mentol con potentes efectos digestivos, analgésicos y antimicrobianos.",
+    definicion: "La menta piperita es una planta herbácea perenne de la familia Lamiaceae, híbrido natural entre la menta acuática y la menta verde. Su principio activo principal es el mentol, que le confiere su característico frescor y sus propiedades medicinales únicas.",
+    beneficios: ["Digestiva","Analgésica","Antimicrobiana","Descongestionante","Refrescante","Antiespástica"],
+    usos: [
+      "Aliviar la indigestión, náuseas y el síndrome de intestino irritable.",
+      "Reducir dolores de cabeza y migrañas (aplicación tópica).",
+      "Descongestionar las vías respiratorias en resfriados y sinusitis.",
+      "Refrescar el aliento y mejorar la salud bucal.",
+      "Aliviar el dolor muscular y las molestias articulares."
+    ],
+    recetas: [
+      { nombre: "Infusión digestiva post-comida", pasos: "Añade 10-12 hojas de menta fresca (o 1 cucharadita seca) a una taza de agua hirviendo. Tapa y deja infusionar 5 minutos. Bebe sin azúcar después de las comidas para facilitar la digestión y reducir la hinchazón." },
+      { nombre: "Remedio para la jaqueca", pasos: "Pon 2-3 gotas de aceite esencial de menta pura en las yemas de los dedos. Masajea suavemente en las sienes, frente y nuca durante 3-5 minutos. Recuéstate en un lugar oscuro durante 15 minutos. Evita el contacto con los ojos." }
+    ]
+  },
+  {
+    nombre: "Romero",
+    latin: "Salvia rosmarinus",
+    categoria: "Estimulante · Circulatoria",
+    img: "https://st.depositphotos.com/1514637/4847/i/450/depositphotos_48477813-stock-photo-rosemary-branch.jpg",
+    desc: "Hierba aromática que estimula la circulación, la memoria y combate el estrés oxidativo.",
+    definicion: "El romero es un arbusto leñoso perenne de la familia Lamiaceae, nativo del Mediterráneo. Rico en ácido rosmarínico, carnosol y aceites esenciales, es uno de los antioxidantes naturales más potentes conocidos y tiene propiedades estimulantes del sistema nervioso central.",
+    beneficios: ["Antioxidante","Estimulante circulatorio","Neuroprotector","Antibacteriano","Antiinflamatorio","Estimulante capilar"],
+    usos: [
+      "Mejorar la concentración, la memoria y el rendimiento cognitivo.",
+      "Estimular la circulación sanguínea y aliviar la hipotensión.",
+      "Combatir la caída del cabello y estimular su crecimiento.",
+      "Aliviar dolores musculares y reumáticos por uso tópico.",
+      "Proteger el organismo del estrés oxidativo y el envejecimiento celular."
+    ],
+    recetas: [
+      { nombre: "Tónico capilar anti-caída", pasos: "Hierve 4 ramitas de romero fresco en 500 ml de agua durante 10 minutos. Deja enfriar y cuela. Aplica el líquido sobre el cuero cabelludo con masaje vigoroso después del champú. No enjuagues. Usa 3 veces por semana durante al menos 2 meses." },
+      { nombre: "Infusión estimulante matutina", pasos: "Pon 2-3 ramitas de romero fresco en agua hirviendo. Infusiona 7 minutos tapado. Bebe una taza por la mañana (no por la noche, ya que es estimulante). Potencia la concentración y el estado de alerta." }
+    ]
+  },
+  {
+    nombre: "Echinacea",
+    latin: "Echinacea purpurea",
+    categoria: "Inmunoestimulante · Antiviral",
+    img: "https://t3.ftcdn.net/jpg/00/67/54/16/360_F_67541691_jJ1R838ohiJmt6vEjuWwpxYVvsQK5Fye.jpg",
+    desc: "La flor del cono púrpura, defensa natural del sistema inmune frente a infecciones.",
+    definicion: "La equinácea es una planta herbácea perenne de la familia Asteraceae, originaria de Norteamérica. Era ampliamente usada por los nativos americanos antes de ser introducida en la medicina occidental. Contiene alquilamidas, polisacáridos y glucoproteínas que modulan y potencian el sistema inmune.",
+    beneficios: ["Inmunoestimulante","Antiviral","Antibacteriana","Antiinflamatoria","Antifúngica","Cicatrizante"],
+    usos: [
+      "Prevenir y acortar la duración de resfriados y gripes.",
+      "Fortalecer el sistema inmune en personas inmunodeprimidas.",
+      "Tratar infecciones respiratorias superiores de forma natural.",
+      "Acelerar la curación de heridas e infecciones cutáneas.",
+      "Combatir infecciones urinarias recurrentes."
+    ],
+    recetas: [
+      { nombre: "Tintura inmunoestimulante", pasos: "Llena un frasco de vidrio con raíz de equinácea seca picada. Cubre completamente con alcohol de 40° (vodka o similar). Tapa herméticamente y deja macerar en lugar oscuro durante 4 semanas, agitando cada 2 días. Cuela y toma 30 gotas en agua 3 veces al día al inicio del resfriado." },
+      { nombre: "Té reforzador de defensas", pasos: "Hierve 1 cucharada de raíz de equinácea seca en 2 tazas de agua durante 15 minutos a fuego lento. Cuela y bebe 2 tazas al día durante un máximo de 10 días seguidos. Haz un descanso de 3 días antes de repetir el ciclo." }
+    ]
+  },
+  {
+    nombre: "Tilo",
+    latin: "Tilia cordata",
+    categoria: "Sedante · Cardioprotectora",
+    img: "https://thumbs.dreamstime.com/b/flores-del-tilo-%C3%A1rbol-9806817.jpg",
+    desc: "Las flores del tilo son el sedante natural por excelencia para el sistema nervioso.",
+    definicion: "El tilo es un árbol de la familia Malvaceae que puede vivir siglos, venerado en la cultura europea tanto por su belleza como por sus propiedades medicinales. Sus flores y brácteas contienen flavonoides, mucílagos y aceites esenciales con efecto sedante, diaforético y cardioprotector.",
+    beneficios: ["Sedante","Ansiolítica","Diaforética","Antiespasmódica","Cardioprotectora","Antiinflamatoria"],
+    usos: [
+      "Combatir el insomnio y mejorar la calidad del sueño de forma natural.",
+      "Reducir la ansiedad, el nerviosismo y el estrés crónico.",
+      "Bajar la fiebre favoreciendo la sudoración (efecto diaforético).",
+      "Proteger el corazón y mejorar la circulación.",
+      "Calmar las vías respiratorias en tos irritativa y bronquitis."
+    ],
+    recetas: [
+      { nombre: "Infusión nocturna para el insomnio", pasos: "Pon 2 cucharadas de flores de tilo secas en una taza grande. Vierte agua hirviendo y cubre durante 12-15 minutos. Cuela con cuidado, añade miel al gusto y bebe lentamente 30 minutos antes de acostarte. Puedes añadir una pizca de valeriana para potenciar el efecto." },
+      { nombre: "Baño relajante de tilo", pasos: "Prepara una infusión fuerte con 6-8 cucharadas de flores en 1 litro de agua durante 20 minutos. Cuela y añade al agua de la bañera tibia. Permanece en el baño 20 minutos antes de dormir. Ideal para niños con dificultades para conciliar el sueño." }
+    ]
+  },
+  {
+    nombre: "Valeriana",
+    latin: "Valeriana officinalis",
+    categoria: "Sedante · Ansiolítica",
+    img: "https://media.istockphoto.com/id/97471512/es/foto/valeriana-hoja-origen-y-flor.jpg?s=612x612&w=0&k=20&c=m94h4mNs0iUTsQP2HMb7_yhhcbrzSKRXTXHhYG4POM8=",
+    desc: "La raíz más poderosa para combatir el insomnio y la ansiedad de manera natural.",
+    definicion: "La valeriana es una planta herbácea perenne de la familia Valerianaceae, cuya raíz contiene ácido valérico, isovalérico e iridoides que actúan sobre los receptores GABA del cerebro produciendo un efecto sedante comparable al de ciertos ansiolíticos farmacológicos, pero sin sus efectos secundarios.",
+    beneficios: ["Sedante potente","Ansiolítica","Antiespasmódica","Hipotensora suave","Anticonvulsivante","Relajante muscular"],
+    usos: [
+      "Tratar el insomnio severo y los despertares nocturnos frecuentes.",
+      "Reducir la ansiedad generalizada y los ataques de pánico leves.",
+      "Aliviar los calambres musculares y los espasmos intestinales.",
+      "Reducir la presión arterial levemente elevada.",
+      "Calmar el síndrome de piernas inquietas."
+    ],
+    recetas: [
+      { nombre: "Decocción sedante para insomnio", pasos: "Hierve 1 cucharadita de raíz de valeriana seca y troceada en 250 ml de agua durante 10 minutos a fuego bajo. Deja reposar 10 minutos más, cuela y bebe 1 hora antes de dormir. El sabor es fuerte; puedes mezclarlo con miel y manzanilla para suavizarlo." },
+      { nombre: "Tintura para la ansiedad aguda", pasos: "Macera 30 g de raíz de valeriana en 100 ml de alcohol de 60° durante 3 semanas en lugar oscuro. Cuela y toma 25-30 gotas en agua 2-3 veces al día en momentos de alta ansiedad. Evita tomar más de 4 semanas seguidas sin consultar un especialista." }
+    ]
+  },
+  {
+    nombre: "Árnica",
+    latin: "Arnica montana",
+    categoria: "Analgésica · Anticontusión",
+    img: "https://media.istockphoto.com/id/996848014/photo/arnica-montana-plant-isolated.jpg?s=612x612&w=0&k=20&c=yPn3a4r8ggQ6ESmU4ufgCDrLMWaAezU-aOL1glD_IKQ=",
+    desc: "La flor de la montaña para golpes, moratones, dolores musculares y articulares.",
+    definicion: "El árnica de montaña es una planta herbácea perenne de la familia Asteraceae que crece en prados alpinos de Europa. Sus cabezuelas florales contienen helenalina, sesquiterpenos y flavonoides con potentes propiedades antiinflamatorias y analgésicas, especialmente en uso tópico.",
+    beneficios: ["Analgésica","Antiinflamatoria","Antiequimótica","Antiedematosa","Antibacteriana","Estimulante circulatoria"],
+    usos: [
+      "Reducir el dolor e hinchazón de golpes, caídas y contusiones.",
+      "Acelerar la reabsorción de moratones y hematomas.",
+      "Aliviar el dolor muscular tras el ejercicio intenso.",
+      "Calmar el dolor articular en artritis y artrosis.",
+      "Reducir la inflamación en esguinces y torceduras."
+    ],
+    recetas: [
+      { nombre: "Aceite de árnica para golpes", pasos: "Llena un frasco de vidrio con flores secas de árnica y cubre completamente con aceite de oliva virgen extra. Cierra y deja macerar al sol 4-6 semanas (o al baño María 3 horas). Cuela y aplica en la zona afectada con masaje suave. Solo uso externo, nunca sobre heridas abiertas." },
+      { nombre: "Compresas para hematomas", pasos: "Prepara una infusión fuerte con 2 cucharadas de flores de árnica en 200 ml de agua hirviendo. Deja enfriar. Empapa una gasa o paño en la infusión y aplica sobre el moratón durante 20 minutos, 3 veces al día. Mantén elevada la zona si es posible." }
+    ]
+  },
+  {
+    nombre: "Cúrcuma",
+    latin: "Curcuma longa",
+    categoria: "Antiinflamatoria · Antioxidante",
+    img: "https://thumbs.dreamstime.com/b/rhizome-curcum%C3%A9nique-frais-et-poudre-curcuma-isol%C3%A9-sur-fond-blanc-161661644.jpg",
+    desc: "El oro de la India: antiinflamatorio natural más potente conocido por la ciencia.",
+    definicion: "La cúrcuma es una planta rizomatosa tropical de la familia Zingiberaceae, originaria del sudeste asiático. Su principio activo, la curcumina, es uno de los compuestos vegetales con mayor capacidad antiinflamatoria documentada científicamente, comparable en algunos estudios a ciertos antiinflamatorios farmacológicos.",
+    beneficios: ["Antiinflamatoria","Antioxidante","Hepatoprotectora","Anticancerígena preventiva","Neuroprotectora","Antimicrobiana"],
+    usos: [
+      "Combatir la inflamación crónica de articulaciones (artritis reumatoide).",
+      "Proteger el hígado de toxinas y mejorar su función.",
+      "Mejorar la función cognitiva y prevenir el deterioro neurológico.",
+      "Apoyar la salud digestiva y combatir el síndrome del intestino irritable.",
+      "Proteger las células del estrés oxidativo y el envejecimiento prematuro."
+    ],
+    recetas: [
+      { nombre: "Golden Milk (Leche Dorada)", pasos: "Calienta 250 ml de leche vegetal (coco o almendras). Añade 1 cucharadita de cúrcuma, 1/2 de jengibre en polvo, 1/4 de canela, una pizca de pimienta negra (fundamental: aumenta la absorción de curcumina un 2000%) y miel al gusto. Revuelve y bebe cada noche antes de dormir." },
+      { nombre: "Pasta de cúrcuma curativa", pasos: "Mezcla 1/4 taza de cúrcuma en polvo con 1/2 taza de agua en una sartén. Calienta a fuego bajo removiendo hasta obtener una pasta espesa. Añade 70 ml de aceite de coco y 1.5 cucharaditas de pimienta negra. Guarda en nevera hasta 2 semanas. Usa 1/4 de cucharadita en bebidas o comidas diariamente." }
+    ]
+  },
+  {
+    nombre: "Melisa",
+    latin: "Melissa officinalis",
+    categoria: "Calmante · Antiviral",
+    img: "https://thumbs.dreamstime.com/b/lemon-balm-melissa-officinalis-hierba-medicinal-aislada-balc%C3%B3n-de-lim%C3%B3n-fresco-brota-hojas-verdes-y-cimas-florecientes-aisladas-411909807.jpg",
+    desc: "La hierba limón con propiedades calmantes, antivirales y para la memoria.",
+    definicion: "La melisa o toronjil es una planta herbácea perenne de la familia Lamiaceae con fragancia cítrica característica. Contiene ácido rosmarínico, flavonoides y aceites esenciales con actividad antiviral demostrada (especialmente contra el virus del herpes), ansiolítica y neuroprotectora.",
+    beneficios: ["Ansiolítica","Antiviral","Neuroprotectora","Digestiva","Antiespasmódica","Inmunoestimulante"],
+    usos: [
+      "Calmar la ansiedad, el estrés y los estados de nerviosismo.",
+      "Combatir brotes de herpes labial (uso tópico y oral).",
+      "Mejorar la concentración y la función cognitiva.",
+      "Aliviar problemas digestivos ligados al nerviosismo.",
+      "Mejorar el sueño en personas con ansiedad nocturna."
+    ],
+    recetas: [
+      { nombre: "Infusión calmante triple", pasos: "Mezcla cantidades iguales de melisa, tilo y manzanilla (1 cucharada de la mezcla por taza). Infusiona en agua hirviendo 10 minutos tapado. Cuela y bebe 2-3 tazas al día en momentos de alto estrés o antes de eventos que generen ansiedad." },
+      { nombre: "Crema antiherpética", pasos: "Prepara una infusión muy concentrada de melisa (3 cucharadas en 100 ml). Deja enfriar y mezcla con 2 cucharadas de gel de aloe vera. Aplica sobre el herpes labial con un hisopo 4-5 veces al día desde los primeros síntomas (picor, calor). Guarda en nevera." }
+    ]
+  },
+  {
+    nombre: "Orégano",
+    latin: "Origanum vulgare",
+    categoria: "Antimicrobiana · Antioxidante",
+    img: "https://st.depositphotos.com/2370557/52180/i/450/depositphotos_521803544-stock-photo-oregano-marjoram-herbs-isolated-white.jpg",
+    desc: "Mucho más que condimento: antibiótico natural, antifúngico y antioxidante excepcional.",
+    definicion: "El orégano es una planta aromática perenne de la familia Lamiaceae, originaria de la cuenca mediterránea. Su aceite esencial, especialmente el de orégano silvestre (carvacrol y timol), exhibe propiedades antimicrobianas de amplio espectro documentadas in vitro e in vivo, siendo uno de los antibióticos naturales más potentes estudiados.",
+    beneficios: ["Antibacteriano potente","Antifúngico","Antiviral","Antioxidante","Antiparasitario","Antiinflamatorio"],
+    usos: [
+      "Combatir infecciones bacterianas resistentes a antibióticos convencionales.",
+      "Tratar candidiasis intestinal y vaginal.",
+      "Eliminar parásitos intestinales (giardia, cándida).",
+      "Fortalecer el sistema inmune preventivamente.",
+      "Tratar infecciones respiratorias y sinusitis."
+    ],
+    recetas: [
+      { nombre: "Aceite de orégano concentrado", pasos: "Calienta 100 ml de aceite de oliva a temperatura muy baja (nunca hervir). Añade 4 cucharadas de orégano seco o fresco. Mantén a fuego mínimo 30 minutos. Cuela y guarda en frasco oscuro. Toma 1 cucharadita al día o úsalo tópicamente en hongos cutáneos." },
+      { nombre: "Vapor para infecciones respiratorias", pasos: "Hierve agua en una olla amplia. Añade un puñado generoso de orégano fresco. Retira del fuego, inclínate sobre la olla a distancia segura y cubre tu cabeza con una toalla. Inhala el vapor durante 10-15 minutos. Repite 2-3 veces al día en procesos gripales." }
+    ]
+  },
+  {
+    nombre: "Ajo",
+    latin: "Allium sativum",
+    categoria: "Antibiótica · Cardiovascular",
+    img: "https://media.gettyimages.com/id/2164700756/es/foto/image-of-fresh-garlic-and-small-garlic-cloves-inside-garlic.jpg?s=612x612&w=0&k=20&c=PaMEDvUAmkOsfemXhEEscULd3s7OYkECJhfaKEZ32o8=",
+    desc: "El antibiótico de la naturaleza: protector cardiovascular, antiviral y antifúngico.",
+    definicion: "El ajo es una planta bulbosa de la familia Amaryllidaceae, cultivado desde hace más de 5000 años como alimento y medicina. La alicina, producida al machacar el ajo crudo, es uno de los compuestos antimicrobianos más estudiados y potentes de la naturaleza, con acción contra más de 60 especies de bacterias.",
+    beneficios: ["Antibacteriano","Antiviral","Cardioprotector","Antifúngico","Anticolesterol","Antihipertensivo"],
+    usos: [
+      "Prevenir y tratar infecciones bacterianas y virales.",
+      "Reducir el colesterol LDL y triglicéridos en sangre.",
+      "Bajar la presión arterial de forma natural.",
+      "Mejorar la circulación y prevenir trombos.",
+      "Combatir hongos internos y externos."
+    ],
+    recetas: [
+      { nombre: "Jarabe de ajo y miel para la gripe", pasos: "Machaca finamente 10 dientes de ajo crudo y mezcla con 200 g de miel cruda. Deja reposar tapado 24 horas a temperatura ambiente (la miel se volverá más líquida). Toma 1 cucharada 3 veces al día. Conserva en nevera hasta 2 meses." },
+      { nombre: "Tónico cardiovascular fermentado", pasos: "Pela 1 cabeza entera de ajos. Machaca cada diente y coloca en un frasco. Cubre con 200 ml de vinagre de manzana ecológico y añade 200 ml de miel. Agita bien y deja fermentar 4 semanas en lugar oscuro, agitando diariamente. Toma 1 cucharada en ayunas." }
+    ]
+  },
+  {
+    nombre: "Salvia",
+    latin: "Salvia officinalis",
+    categoria: "Hormonal · Antiséptica",
+    img: "https://sembramos.com.co/wp-content/uploads/2023/10/salvia-flor-pixabay-519x800.jpg",
+    desc: "Aliada de la mujer: regula los sofocos, la menopausia y tiene poder antiséptico oral.",
+    definicion: "La salvia es un arbusto aromático perenne de la familia Lamiaceae, nativa del Mediterráneo. Su nombre latino 'salvare' (salvar) refleja su larga historia medicinal. Contiene estrógenos vegetales (fitoestrógenos), ácido rosmarínico y aceites esenciales con propiedades hormonoregulatorias, antisépticas y neuroprotectoras.",
+    beneficios: ["Reguladora hormonal","Antiséptica oral","Antitranspirante","Neuroprotectora","Antiinflamatoria","Digestiva"],
+    usos: [
+      "Reducir los sofocos y sudores nocturnos en la menopausia.",
+      "Tratar infecciones bucales, gingivitis y aftas.",
+      "Mejorar la memoria y la función cognitiva.",
+      "Reducir la sudoración excesiva (hiperhidrosis).",
+      "Aliviar irregularidades menstruales por desequilibrios hormonales."
+    ],
+    recetas: [
+      { nombre: "Infusión para sofocos menopáusicos", pasos: "Infusiona 2 cucharadas de hojas de salvia seca en 250 ml de agua hirviendo durante 10 minutos tapado. Cuela y bebe fría (preferiblemente con hielo). Toma 2-3 tazas al día durante al menos 4-8 semanas para notar el efecto regulador hormonal." },
+      { nombre: "Colutorio antiséptico bucal", pasos: "Prepara una infusión fuerte de salvia (3 cucharadas en 200 ml). Añade 5 gotas de aceite de árbol del té y 1 cucharadita de sal marina. Usa como enjuague bucal durante 30 segundos, 2 veces al día. Ideal para encías inflamadas, aftas o mal aliento crónico." }
+    ]
+  },
+  {
+    nombre: "Hipérico",
+    latin: "Hypericum perforatum",
+    categoria: "Antidepresiva · Nerviosa",
+    img: "https://media.istockphoto.com/id/1007664850/es/foto/hierba-de-san-juan-hierbas-p%C3%ADldoras-m%C3%A9dicas.jpg?s=612x612&w=0&k=20&c=DggG9roQfKNliuXqxkVuxtdtzGS-omonvP1apV9Nkmk=",
+    desc: "El antidepresivo natural más estudiado del mundo, eficaz en depresión leve-moderada.",
+    definicion: "El hipérico o hierba de San Juan es una planta perenne de la familia Hypericaceae, con llamativas flores amarillas. Contiene hipericina e hiperforina, compuestos que inhiben la recaptación de serotonina, dopamina y noradrenalina con una eficacia comparable a los antidepresivos convencionales en depresión leve a moderada, según más de 30 ensayos clínicos controlados.",
+    beneficios: ["Antidepresiva","Ansiolítica","Cicatrizante","Antiviral","Antiinflamatoria","Nervinofortificante"],
+    usos: [
+      "Tratar la depresión leve a moderada y los trastornos del ánimo estacionales.",
+      "Reducir la ansiedad, el nerviosismo y los estados de tristeza crónica.",
+      "Aliviar la neuralgia, el dolor nervioso y las neuralgias postherpéticas.",
+      "Cicatrizar heridas y quemaduras por uso tópico (aceite rojo).",
+      "Mejorar el bienestar general en estados de agotamiento mental."
+    ],
+    recetas: [
+      { nombre: "Infusión antidepresiva", pasos: "Infusiona 2 cucharaditas de hipérico seco en 200 ml de agua hirviendo durante 10 minutos. Bebe 3 tazas al día durante un mínimo de 4-6 semanas (los efectos son graduales). Nota: puede causar fotosensibilidad; evita exposición solar intensa durante el tratamiento." },
+      { nombre: "Aceite rojo cicatrizante", pasos: "Llena un frasco de vidrio transparente con flores frescas de hipérico. Cubre completamente con aceite de oliva virgen. Sella y expón al sol durante 6-8 semanas; el aceite adquirirá un color rojo rubí característico. Cuela y aplica sobre heridas, quemaduras o neuralgias." }
+    ]
+  },
+  {
+    nombre: "Cola de Caballo",
+    latin: "Equisetum arvense",
+    categoria: "Diurética · Remineralizante",
+    img: "https://upload.wikimedia.org/wikipedia/commons/6/60/Equisetum-arvense-vegetative.JPG",
+    desc: "Planta prehistórica rica en sílice: remineraliza huesos, uñas, cabello y limpia riñones.",
+    definicion: "La cola de caballo es una planta vascular primitiva de la familia Equisetaceae, sin flores ni semillas, que no ha cambiado en 300 millones de años. Es la fuente vegetal más rica en sílice orgánica biodisponible, mineral esencial para el colágeno, los huesos, el cabello, las uñas y la piel.",
+    beneficios: ["Remineralizante","Diurética","Cicatrizante","Antiinflamatoria renal","Astringente","Hemostática"],
+    usos: [
+      "Fortalecer huesos, uñas frágiles y cabello quebradizo.",
+      "Eliminar líquidos retenidos y reducir el edema.",
+      "Prevenir y tratar infecciones urinarias recurrentes.",
+      "Acelerar la cicatrización de heridas y fracturas óseas.",
+      "Mejorar la elasticidad de la piel y reducir las arrugas."
+    ],
+    recetas: [
+      { nombre: "Decocción para los riñones", pasos: "Hierve 2-3 cucharadas de cola de caballo seca en 500 ml de agua durante 15-20 minutos a fuego medio. Cuela y bebe 2-3 tazas al día durante no más de 2 semanas seguidas. Es un poderoso diurético: asegúrate de beber suficiente agua adicional." },
+      { nombre: "Baño de uñas remineralizante", pasos: "Prepara una decocción fuerte (4 cucharadas en 300 ml). Deja templar. Sumerge las uñas de manos o pies durante 20 minutos, 3 veces por semana. En 4-6 semanas notarás uñas más fuertes y menos quebradizas. Puedes añadir unas gotas de aceite de limón." }
+    ]
+  },
+];
+
+const grid = document.getElementById('grid');
+const overlay = document.getElementById('overlay');
+const modal = document.getElementById('modal');
+const modalClose = document.getElementById('modalClose');
+const searchInput = document.getElementById('searchInput');
+const noResults = document.getElementById('noResults');
+
+function buildGrid(list) {
+  grid.innerHTML = '';
+  if (list.length === 0) { noResults.style.display = 'block'; return; }
+  noResults.style.display = 'none';
+  list.forEach((p, i) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.style.animationDelay = `${i * 0.06}s`;
+    card.innerHTML = `
+      <div class="card-img-wrap">
+        <img class="card-img" src="${p.img}" alt="${p.nombre}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600&q=80'">
+        <span class="card-hint">Ver detalles</span>
+      </div>
+      <div class="card-body">
+        <div class="card-tag">${p.categoria}</div>
+        <div class="card-name">${p.nombre}</div>
+        <div class="card-latin">${p.latin}</div>
+        <div class="card-desc">${p.desc}</div>
+      </div>
+    `;
+    card.addEventListener('click', () => openModal(p));
+    grid.appendChild(card);
+  });
+}
+
+function openModal(p) {
+  document.getElementById('modalImg').src = p.img;
+  document.getElementById('modalImg').onerror = function() { this.src='https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600&q=80'; };
+  document.getElementById('modalTag').textContent = p.categoria;
+  document.getElementById('modalTitle').textContent = p.nombre;
+  document.getElementById('modalLatin').textContent = p.latin;
+
+  const beneficiosHTML = p.beneficios.map(b => `<span class="benefit-tag">${b}</span>`).join('');
+  const usosHTML = p.usos.map(u => `<li>${u}</li>`).join('');
+  const recetasHTML = p.recetas.map(r => `
+    <div class="recipe-box">
+      <div class="recipe-name">🍵 ${r.nombre}</div>
+      <p>${r.pasos}</p>
+    </div>
+  `).join('');
+
+  document.getElementById('modalBody').innerHTML = `
+    <div class="modal-section">
+      <div class="modal-section-title">📖 Definición</div>
+      <p>${p.definicion}</p>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-title">✨ Beneficios principales</div>
+      <div class="benefits-list">${beneficiosHTML}</div>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-title">🌿 Dónde y cómo utilizarla</div>
+      <ul class="uses-list">${usosHTML}</ul>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-title">📜 Recetas tradicionales</div>
+      ${recetasHTML}
+    </div>
+  `;
+
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  modal.scrollTop = 0;
+}
+
+function closeModal() {
+  overlay.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+modalClose.addEventListener('click', closeModal);
+overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+searchInput.addEventListener('input', () => {
+  const q = searchInput.value.toLowerCase().trim();
+  if (!q) { buildGrid(plantas); return; }
+  const filtered = plantas.filter(p =>
+    p.nombre.toLowerCase().includes(q) ||
+    p.latin.toLowerCase().includes(q) ||
+    p.categoria.toLowerCase().includes(q) ||
+    p.desc.toLowerCase().includes(q)
+  );
+  buildGrid(filtered);
+});
+
+buildGrid(plantas);
+</script>
+</body>
+</html>
