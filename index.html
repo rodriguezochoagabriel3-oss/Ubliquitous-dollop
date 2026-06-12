@@ -436,6 +436,7 @@
     .modal-title { font-size: 1.5rem; }
     .grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; }
   }
+
 </style>
 </head>
 <body>
@@ -458,7 +459,6 @@
   <div class="no-results" id="noResults">No se encontraron plantas con ese nombre.</div>
 </section>
 
-<!-- Modal -->
 <div class="overlay" id="overlay">
   <div class="modal" id="modal">
     <div class="modal-header">
@@ -597,250 +597,40 @@ const plantas = [
     ],
     recetas: [
       { nombre: "Tónico capilar anti-caída", pasos: "Hierve 4 ramitas de romero fresco en 500 ml de agua durante 10 minutos. Deja enfriar y cuela. Aplica el líquido sobre el cuero cabelludo con masaje vigoroso después del champú. No enjuagues. Usa 3 veces por semana durante al menos 2 meses." },
-      { nombre: "Infusión estimulante matutina", pasos: "Pon 2-3 ramitas de romero fresco en agua hirviendo. Infusiona 7 minutos tapado. Bebe una taza por la mañana (no por la noche, ya que es estimulante). Potencia la concentración y el estado de alerta." }
+      { nombre: "Infusión estimulante matutina", pasos: "Pon 2-3 ramitas de romero fresco en agua hirviendo. Infusiona 7 minutos tapado. Bebe una taza por la mañana (no por la noche, ya que es estimulante). Potencia la concentración y la energía de forma natural." }
     ]
-  },
-  {
-    nombre: "Echinacea",
-    latin: "Echinacea purpurea",
-    categoria: "Inmunoestimulante · Antiviral",
-    img: "https://t3.ftcdn.net/jpg/00/67/54/16/360_F_67541691_jJ1R838ohiJmt6vEjuWwpxYVvsQK5Fye.jpg",
-    desc: "La flor del cono púrpura, defensa natural del sistema inmune frente a infecciones.",
-    definicion: "La equinácea es una planta herbácea perenne de la familia Asteraceae, originaria de Norteamérica. Era ampliamente usada por los nativos americanos antes de ser introducida en la medicina occidental. Contiene alquilamidas, polisacáridos y glucoproteínas que modulan y potencian el sistema inmune.",
-    beneficios: ["Inmunoestimulante","Antiviral","Antibacteriana","Antiinflamatoria","Antifúngica","Cicatrizante"],
-    usos: [
-      "Prevenir y acortar la duración de resfriados y gripes.",
-      "Fortalecer el sistema inmune en personas inmunodeprimidas.",
-      "Tratar infecciones respiratorias superiores de forma natural.",
-      "Acelerar la curación de heridas e infecciones cutáneas.",
-      "Combatir infecciones urinarias recurrentes."
-    ],
-    recetas: [
-      { nombre: "Tintura inmunoestimulante", pasos: "Llena un frasco de vidrio con raíz de equinácea seca picada. Cubre completamente con alcohol de 40° (vodka o similar). Tapa herméticamente y deja macerar en lugar oscuro durante 4 semanas, agitando cada 2 días. Cuela y toma 30 gotas en agua 3 veces al día al inicio del resfriado." },
-      { nombre: "Té reforzador de defensas", pasos: "Hierve 1 cucharada de raíz de equinácea seca en 2 tazas de agua durante 15 minutos a fuego lento. Cuela y bebe 2 tazas al día durante un máximo de 10 días seguidos. Haz un descanso de 3 días antes de repetir el ciclo." }
-    ]
-  },
-  {
-    nombre: "Tilo",
-    latin: "Tilia cordata",
-    categoria: "Sedante · Cardioprotectora",
-    img: "https://thumbs.dreamstime.com/b/flores-del-tilo-%C3%A1rbol-9806817.jpg",
-    desc: "Las flores del tilo son el sedante natural por excelencia para el sistema nervioso.",
-    definicion: "El tilo es un árbol de la familia Malvaceae que puede vivir siglos, venerado en la cultura europea tanto por su belleza como por sus propiedades medicinales. Sus flores y brácteas contienen flavonoides, mucílagos y aceites esenciales con efecto sedante, diaforético y cardioprotector.",
-    beneficios: ["Sedante","Ansiolítica","Diaforética","Antiespasmódica","Cardioprotectora","Antiinflamatoria"],
-    usos: [
-      "Combatir el insomnio y mejorar la calidad del sueño de forma natural.",
-      "Reducir la ansiedad, el nerviosismo y el estrés crónico.",
-      "Bajar la fiebre favoreciendo la sudoración (efecto diaforético).",
-      "Proteger el corazón y mejorar la circulación.",
-      "Calmar las vías respiratorias en tos irritativa y bronquitis."
-    ],
-    recetas: [
-      { nombre: "Infusión nocturna para el insomnio", pasos: "Pon 2 cucharadas de flores de tilo secas en una taza grande. Vierte agua hirviendo y cubre durante 12-15 minutos. Cuela con cuidado, añade miel al gusto y bebe lentamente 30 minutos antes de acostarte. Puedes añadir una pizca de valeriana para potenciar el efecto." },
-      { nombre: "Baño relajante de tilo", pasos: "Prepara una infusión fuerte con 6-8 cucharadas de flores en 1 litro de agua durante 20 minutos. Cuela y añade al agua de la bañera tibia. Permanece en el baño 20 minutos antes de dormir. Ideal para niños con dificultades para conciliar el sueño." }
-    ]
-  },
-  {
-    nombre: "Valeriana",
-    latin: "Valeriana officinalis",
-    categoria: "Sedante · Ansiolítica",
-    img: "https://media.istockphoto.com/id/97471512/es/foto/valeriana-hoja-origen-y-flor.jpg?s=612x612&w=0&k=20&c=m94h4mNs0iUTsQP2HMb7_yhhcbrzSKRXTXHhYG4POM8=",
-    desc: "La raíz más poderosa para combatir el insomnio y la ansiedad de manera natural.",
-    definicion: "La valeriana es una planta herbácea perenne de la familia Valerianaceae, cuya raíz contiene ácido valérico, isovalérico e iridoides que actúan sobre los receptores GABA del cerebro produciendo un efecto sedante comparable al de ciertos ansiolíticos farmacológicos, pero sin sus efectos secundarios.",
-    beneficios: ["Sedante potente","Ansiolítica","Antiespasmódica","Hipotensora suave","Anticonvulsivante","Relajante muscular"],
-    usos: [
-      "Tratar el insomnio severo y los despertares nocturnos frecuentes.",
-      "Reducir la ansiedad generalizada y los ataques de pánico leves.",
-      "Aliviar los calambres musculares y los espasmos intestinales.",
-      "Reducir la presión arterial levemente elevada.",
-      "Calmar el síndrome de piernas inquietas."
-    ],
-    recetas: [
-      { nombre: "Decocción sedante para insomnio", pasos: "Hierve 1 cucharadita de raíz de valeriana seca y troceada en 250 ml de agua durante 10 minutos a fuego bajo. Deja reposar 10 minutos más, cuela y bebe 1 hora antes de dormir. El sabor es fuerte; puedes mezclarlo con miel y manzanilla para suavizarlo." },
-      { nombre: "Tintura para la ansiedad aguda", pasos: "Macera 30 g de raíz de valeriana en 100 ml de alcohol de 60° durante 3 semanas en lugar oscuro. Cuela y toma 25-30 gotas en agua 2-3 veces al día en momentos de alta ansiedad. Evita tomar más de 4 semanas seguidas sin consultar un especialista." }
-    ]
-  },
-  {
-    nombre: "Árnica",
-    latin: "Arnica montana",
-    categoria: "Analgésica · Anticontusión",
-    img: "https://media.istockphoto.com/id/996848014/photo/arnica-montana-plant-isolated.jpg?s=612x612&w=0&k=20&c=yPn3a4r8ggQ6ESmU4ufgCDrLMWaAezU-aOL1glD_IKQ=",
-    desc: "La flor de la montaña para golpes, moratones, dolores musculares y articulares.",
-    definicion: "El árnica de montaña es una planta herbácea perenne de la familia Asteraceae que crece en prados alpinos de Europa. Sus cabezuelas florales contienen helenalina, sesquiterpenos y flavonoides con potentes propiedades antiinflamatorias y analgésicas, especialmente en uso tópico.",
-    beneficios: ["Analgésica","Antiinflamatoria","Antiequimótica","Antiedematosa","Antibacteriana","Estimulante circulatoria"],
-    usos: [
-      "Reducir el dolor e hinchazón de golpes, caídas y contusiones.",
-      "Acelerar la reabsorción de moratones y hematomas.",
-      "Aliviar el dolor muscular tras el ejercicio intenso.",
-      "Calmar el dolor articular en artritis y artrosis.",
-      "Reducir la inflamación en esguinces y torceduras."
-    ],
-    recetas: [
-      { nombre: "Aceite de árnica para golpes", pasos: "Llena un frasco de vidrio con flores secas de árnica y cubre completamente con aceite de oliva virgen extra. Cierra y deja macerar al sol 4-6 semanas (o al baño María 3 horas). Cuela y aplica en la zona afectada con masaje suave. Solo uso externo, nunca sobre heridas abiertas." },
-      { nombre: "Compresas para hematomas", pasos: "Prepara una infusión fuerte con 2 cucharadas de flores de árnica en 200 ml de agua hirviendo. Deja enfriar. Empapa una gasa o paño en la infusión y aplica sobre el moratón durante 20 minutos, 3 veces al día. Mantén elevada la zona si es posible." }
-    ]
-  },
-  {
-    nombre: "Cúrcuma",
-    latin: "Curcuma longa",
-    categoria: "Antiinflamatoria · Antioxidante",
-    img: "https://thumbs.dreamstime.com/b/rhizome-curcum%C3%A9nique-frais-et-poudre-curcuma-isol%C3%A9-sur-fond-blanc-161661644.jpg",
-    desc: "El oro de la India: antiinflamatorio natural más potente conocido por la ciencia.",
-    definicion: "La cúrcuma es una planta rizomatosa tropical de la familia Zingiberaceae, originaria del sudeste asiático. Su principio activo, la curcumina, es uno de los compuestos vegetales con mayor capacidad antiinflamatoria documentada científicamente, comparable en algunos estudios a ciertos antiinflamatorios farmacológicos.",
-    beneficios: ["Antiinflamatoria","Antioxidante","Hepatoprotectora","Anticancerígena preventiva","Neuroprotectora","Antimicrobiana"],
-    usos: [
-      "Combatir la inflamación crónica de articulaciones (artritis reumatoide).",
-      "Proteger el hígado de toxinas y mejorar su función.",
-      "Mejorar la función cognitiva y prevenir el deterioro neurológico.",
-      "Apoyar la salud digestiva y combatir el síndrome del intestino irritable.",
-      "Proteger las células del estrés oxidativo y el envejecimiento prematuro."
-    ],
-    recetas: [
-      { nombre: "Golden Milk (Leche Dorada)", pasos: "Calienta 250 ml de leche vegetal (coco o almendras). Añade 1 cucharadita de cúrcuma, 1/2 de jengibre en polvo, 1/4 de canela, una pizca de pimienta negra (fundamental: aumenta la absorción de curcumina un 2000%) y miel al gusto. Revuelve y bebe cada noche antes de dormir." },
-      { nombre: "Pasta de cúrcuma curativa", pasos: "Mezcla 1/4 taza de cúrcuma en polvo con 1/2 taza de agua en una sartén. Calienta a fuego bajo removiendo hasta obtener una pasta espesa. Añade 70 ml de aceite de coco y 1.5 cucharaditas de pimienta negra. Guarda en nevera hasta 2 semanas. Usa 1/4 de cucharadita en bebidas o comidas diariamente." }
-    ]
-  },
-  {
-    nombre: "Melisa",
-    latin: "Melissa officinalis",
-    categoria: "Calmante · Antiviral",
-    img: "https://thumbs.dreamstime.com/b/lemon-balm-melissa-officinalis-hierba-medicinal-aislada-balc%C3%B3n-de-lim%C3%B3n-fresco-brota-hojas-verdes-y-cimas-florecientes-aisladas-411909807.jpg",
-    desc: "La hierba limón con propiedades calmantes, antivirales y para la memoria.",
-    definicion: "La melisa o toronjil es una planta herbácea perenne de la familia Lamiaceae con fragancia cítrica característica. Contiene ácido rosmarínico, flavonoides y aceites esenciales con actividad antiviral demostrada (especialmente contra el virus del herpes), ansiolítica y neuroprotectora.",
-    beneficios: ["Ansiolítica","Antiviral","Neuroprotectora","Digestiva","Antiespasmódica","Inmunoestimulante"],
-    usos: [
-      "Calmar la ansiedad, el estrés y los estados de nerviosismo.",
-      "Combatir brotes de herpes labial (uso tópico y oral).",
-      "Mejorar la concentración y la función cognitiva.",
-      "Aliviar problemas digestivos ligados al nerviosismo.",
-      "Mejorar el sueño en personas con ansiedad nocturna."
-    ],
-    recetas: [
-      { nombre: "Infusión calmante triple", pasos: "Mezcla cantidades iguales de melisa, tilo y manzanilla (1 cucharada de la mezcla por taza). Infusiona en agua hirviendo 10 minutos tapado. Cuela y bebe 2-3 tazas al día en momentos de alto estrés o antes de eventos que generen ansiedad." },
-      { nombre: "Crema antiherpética", pasos: "Prepara una infusión muy concentrada de melisa (3 cucharadas en 100 ml). Deja enfriar y mezcla con 2 cucharadas de gel de aloe vera. Aplica sobre el herpes labial con un hisopo 4-5 veces al día desde los primeros síntomas (picor, calor). Guarda en nevera." }
-    ]
-  },
-  {
-    nombre: "Orégano",
-    latin: "Origanum vulgare",
-    categoria: "Antimicrobiana · Antioxidante",
-    img: "https://st.depositphotos.com/2370557/52180/i/450/depositphotos_521803544-stock-photo-oregano-marjoram-herbs-isolated-white.jpg",
-    desc: "Mucho más que condimento: antibiótico natural, antifúngico y antioxidante excepcional.",
-    definicion: "El orégano es una planta aromática perenne de la familia Lamiaceae, originaria de la cuenca mediterránea. Su aceite esencial, especialmente el de orégano silvestre (carvacrol y timol), exhibe propiedades antimicrobianas de amplio espectro documentadas in vitro e in vivo, siendo uno de los antibióticos naturales más potentes estudiados.",
-    beneficios: ["Antibacteriano potente","Antifúngico","Antiviral","Antioxidante","Antiparasitario","Antiinflamatorio"],
-    usos: [
-      "Combatir infecciones bacterianas resistentes a antibióticos convencionales.",
-      "Tratar candidiasis intestinal y vaginal.",
-      "Eliminar parásitos intestinales (giardia, cándida).",
-      "Fortalecer el sistema inmune preventivamente.",
-      "Tratar infecciones respiratorias y sinusitis."
-    ],
-    recetas: [
-      { nombre: "Aceite de orégano concentrado", pasos: "Calienta 100 ml de aceite de oliva a temperatura muy baja (nunca hervir). Añade 4 cucharadas de orégano seco o fresco. Mantén a fuego mínimo 30 minutos. Cuela y guarda en frasco oscuro. Toma 1 cucharadita al día o úsalo tópicamente en hongos cutáneos." },
-      { nombre: "Vapor para infecciones respiratorias", pasos: "Hierve agua en una olla amplia. Añade un puñado generoso de orégano fresco. Retira del fuego, inclínate sobre la olla a distancia segura y cubre tu cabeza con una toalla. Inhala el vapor durante 10-15 minutos. Repite 2-3 veces al día en procesos gripales." }
-    ]
-  },
-  {
-    nombre: "Ajo",
-    latin: "Allium sativum",
-    categoria: "Antibiótica · Cardiovascular",
-    img: "https://media.gettyimages.com/id/2164700756/es/foto/image-of-fresh-garlic-and-small-garlic-cloves-inside-garlic.jpg?s=612x612&w=0&k=20&c=PaMEDvUAmkOsfemXhEEscULd3s7OYkECJhfaKEZ32o8=",
-    desc: "El antibiótico de la naturaleza: protector cardiovascular, antiviral y antifúngico.",
-    definicion: "El ajo es una planta bulbosa de la familia Amaryllidaceae, cultivado desde hace más de 5000 años como alimento y medicina. La alicina, producida al machacar el ajo crudo, es uno de los compuestos antimicrobianos más estudiados y potentes de la naturaleza, con acción contra más de 60 especies de bacterias.",
-    beneficios: ["Antibacteriano","Antiviral","Cardioprotector","Antifúngico","Anticolesterol","Antihipertensivo"],
-    usos: [
-      "Prevenir y tratar infecciones bacterianas y virales.",
-      "Reducir el colesterol LDL y triglicéridos en sangre.",
-      "Bajar la presión arterial de forma natural.",
-      "Mejorar la circulación y prevenir trombos.",
-      "Combatir hongos internos y externos."
-    ],
-    recetas: [
-      { nombre: "Jarabe de ajo y miel para la gripe", pasos: "Machaca finamente 10 dientes de ajo crudo y mezcla con 200 g de miel cruda. Deja reposar tapado 24 horas a temperatura ambiente (la miel se volverá más líquida). Toma 1 cucharada 3 veces al día. Conserva en nevera hasta 2 meses." },
-      { nombre: "Tónico cardiovascular fermentado", pasos: "Pela 1 cabeza entera de ajos. Machaca cada diente y coloca en un frasco. Cubre con 200 ml de vinagre de manzana ecológico y añade 200 ml de miel. Agita bien y deja fermentar 4 semanas en lugar oscuro, agitando diariamente. Toma 1 cucharada en ayunas." }
-    ]
-  },
-  {
-    nombre: "Salvia",
-    latin: "Salvia officinalis",
-    categoria: "Hormonal · Antiséptica",
-    img: "https://sembramos.com.co/wp-content/uploads/2023/10/salvia-flor-pixabay-519x800.jpg",
-    desc: "Aliada de la mujer: regula los sofocos, la menopausia y tiene poder antiséptico oral.",
-    definicion: "La salvia es un arbusto aromático perenne de la familia Lamiaceae, nativa del Mediterráneo. Su nombre latino 'salvare' (salvar) refleja su larga historia medicinal. Contiene estrógenos vegetales (fitoestrógenos), ácido rosmarínico y aceites esenciales con propiedades hormonoregulatorias, antisépticas y neuroprotectoras.",
-    beneficios: ["Reguladora hormonal","Antiséptica oral","Antitranspirante","Neuroprotectora","Antiinflamatoria","Digestiva"],
-    usos: [
-      "Reducir los sofocos y sudores nocturnos en la menopausia.",
-      "Tratar infecciones bucales, gingivitis y aftas.",
-      "Mejorar la memoria y la función cognitiva.",
-      "Reducir la sudoración excesiva (hiperhidrosis).",
-      "Aliviar irregularidades menstruales por desequilibrios hormonales."
-    ],
-    recetas: [
-      { nombre: "Infusión para sofocos menopáusicos", pasos: "Infusiona 2 cucharadas de hojas de salvia seca en 250 ml de agua hirviendo durante 10 minutos tapado. Cuela y bebe fría (preferiblemente con hielo). Toma 2-3 tazas al día durante al menos 4-8 semanas para notar el efecto regulador hormonal." },
-      { nombre: "Colutorio antiséptico bucal", pasos: "Prepara una infusión fuerte de salvia (3 cucharadas en 200 ml). Añade 5 gotas de aceite de árbol del té y 1 cucharadita de sal marina. Usa como enjuague bucal durante 30 segundos, 2 veces al día. Ideal para encías inflamadas, aftas o mal aliento crónico." }
-    ]
-  },
-  {
-    nombre: "Hipérico",
-    latin: "Hypericum perforatum",
-    categoria: "Antidepresiva · Nerviosa",
-    img: "https://media.istockphoto.com/id/1007664850/es/foto/hierba-de-san-juan-hierbas-p%C3%ADldoras-m%C3%A9dicas.jpg?s=612x612&w=0&k=20&c=DggG9roQfKNliuXqxkVuxtdtzGS-omonvP1apV9Nkmk=",
-    desc: "El antidepresivo natural más estudiado del mundo, eficaz en depresión leve-moderada.",
-    definicion: "El hipérico o hierba de San Juan es una planta perenne de la familia Hypericaceae, con llamativas flores amarillas. Contiene hipericina e hiperforina, compuestos que inhiben la recaptación de serotonina, dopamina y noradrenalina con una eficacia comparable a los antidepresivos convencionales en depresión leve a moderada, según más de 30 ensayos clínicos controlados.",
-    beneficios: ["Antidepresiva","Ansiolítica","Cicatrizante","Antiviral","Antiinflamatoria","Nervinofortificante"],
-    usos: [
-      "Tratar la depresión leve a moderada y los trastornos del ánimo estacionales.",
-      "Reducir la ansiedad, el nerviosismo y los estados de tristeza crónica.",
-      "Aliviar la neuralgia, el dolor nervioso y las neuralgias postherpéticas.",
-      "Cicatrizar heridas y quemaduras por uso tópico (aceite rojo).",
-      "Mejorar el bienestar general en estados de agotamiento mental."
-    ],
-    recetas: [
-      { nombre: "Infusión antidepresiva", pasos: "Infusiona 2 cucharaditas de hipérico seco en 200 ml de agua hirviendo durante 10 minutos. Bebe 3 tazas al día durante un mínimo de 4-6 semanas (los efectos son graduales). Nota: puede causar fotosensibilidad; evita exposición solar intensa durante el tratamiento." },
-      { nombre: "Aceite rojo cicatrizante", pasos: "Llena un frasco de vidrio transparente con flores frescas de hipérico. Cubre completamente con aceite de oliva virgen. Sella y expón al sol durante 6-8 semanas; el aceite adquirirá un color rojo rubí característico. Cuela y aplica sobre heridas, quemaduras o neuralgias." }
-    ]
-  },
-  {
-    nombre: "Cola de Caballo",
-    latin: "Equisetum arvense",
-    categoria: "Diurética · Remineralizante",
-    img: "https://upload.wikimedia.org/wikipedia/commons/6/60/Equisetum-arvense-vegetative.JPG",
-    desc: "Planta prehistórica rica en sílice: remineraliza huesos, uñas, cabello y limpia riñones.",
-    definicion: "La cola de caballo es una planta vascular primitiva de la familia Equisetaceae, sin flores ni semillas, que no ha cambiado en 300 millones de años. Es la fuente vegetal más rica en sílice orgánica biodisponible, mineral esencial para el colágeno, los huesos, el cabello, las uñas y la piel.",
-    beneficios: ["Remineralizante","Diurética","Cicatrizante","Antiinflamatoria renal","Astringente","Hemostática"],
-    usos: [
-      "Fortalecer huesos, uñas frágiles y cabello quebradizo.",
-      "Eliminar líquidos retenidos y reducir el edema.",
-      "Prevenir y tratar infecciones urinarias recurrentes.",
-      "Acelerar la cicatrización de heridas y fracturas óseas.",
-      "Mejorar la elasticidad de la piel y reducir las arrugas."
-    ],
-    recetas: [
-      { nombre: "Decocción para los riñones", pasos: "Hierve 2-3 cucharadas de cola de caballo seca en 500 ml de agua durante 15-20 minutos a fuego medio. Cuela y bebe 2-3 tazas al día durante no más de 2 semanas seguidas. Es un poderoso diurético: asegúrate de beber suficiente agua adicional." },
-      { nombre: "Baño de uñas remineralizante", pasos: "Prepara una decocción fuerte (4 cucharadas en 300 ml). Deja templar. Sumerge las uñas de manos o pies durante 20 minutos, 3 veces por semana. En 4-6 semanas notarás uñas más fuertes y menos quebradizas. Puedes añadir unas gotas de aceite de limón." }
-    ]
-  },
+  }
 ];
 
 const grid = document.getElementById('grid');
-const overlay = document.getElementById('overlay');
-const modal = document.getElementById('modal');
-const modalClose = document.getElementById('modalClose');
 const searchInput = document.getElementById('searchInput');
 const noResults = document.getElementById('noResults');
 
-function buildGrid(list) {
+const overlay = document.getElementById('overlay');
+const modalClose = document.getElementById('modalClose');
+const modalImg = document.getElementById('modalImg');
+const modalTag = document.getElementById('modalTag');
+const modalTitle = document.getElementById('modalTitle');
+const modalLatin = document.getElementById('modalLatin');
+const modalBody = document.getElementById('modalBody');
+
+function renderPlantas(filter = '') {
   grid.innerHTML = '';
-  if (list.length === 0) { noResults.style.display = 'block'; return; }
-  noResults.style.display = 'none';
-  list.forEach((p, i) => {
+  const filtradas = plantas.filter(p => p.nombre.toLowerCase().includes(filter.toLowerCase()));
+  
+  if(filtradas.length === 0) {
+    noResults.style.display = 'block';
+  } else {
+    noResults.style.display = 'none';
+  }
+
+  filtradas.forEach(p => {
     const card = document.createElement('div');
     card.className = 'card';
-    card.style.animationDelay = `${i * 0.06}s`;
     card.innerHTML = `
       <div class="card-img-wrap">
-        <img class="card-img" src="${p.img}" alt="${p.nombre}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600&q=80'">
-        <span class="card-hint">Ver detalles</span>
+        <img class="card-img" src="${p.img}" alt="${p.nombre}">
+        <span class="card-hint">Ver más</span>
       </div>
       <div class="card-body">
         <div class="card-tag">${p.categoria}</div>
@@ -855,43 +645,42 @@ function buildGrid(list) {
 }
 
 function openModal(p) {
-  document.getElementById('modalImg').src = p.img;
-  document.getElementById('modalImg').onerror = function() { this.src='https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600&q=80'; };
-  document.getElementById('modalTag').textContent = p.categoria;
-  document.getElementById('modalTitle').textContent = p.nombre;
-  document.getElementById('modalLatin').textContent = p.latin;
-
-  const beneficiosHTML = p.beneficios.map(b => `<span class="benefit-tag">${b}</span>`).join('');
-  const usosHTML = p.usos.map(u => `<li>${u}</li>`).join('');
-  const recetasHTML = p.recetas.map(r => `
+  modalImg.src = p.img;
+  modalImg.alt = p.nombre;
+  modalTag.textContent = p.categoria;
+  modalTitle.textContent = p.nombre;
+  modalLatin.textContent = p.latin;
+  
+  let beneficiosHTML = p.beneficios.map(b => `<span class="benefit-tag">${b}</span>`).join('');
+  let usosHTML = p.usos.map(u => `<li>${u}</li>`).join('');
+  let recetasHTML = p.recetas.map(r => `
     <div class="recipe-box">
-      <div class="recipe-name">🍵 ${r.nombre}</div>
+      <div class="recipe-name">📋 ${r.nombre}</div>
       <p>${r.pasos}</p>
     </div>
   `).join('');
 
-  document.getElementById('modalBody').innerHTML = `
+  modalBody.innerHTML = `
     <div class="modal-section">
-      <div class="modal-section-title">📖 Definición</div>
+      <div class="modal-section-title"><span>🌿</span> Qué es</div>
       <p>${p.definicion}</p>
     </div>
     <div class="modal-section">
-      <div class="modal-section-title">✨ Beneficios principales</div>
+      <div class="modal-section-title"><span>✨</span> Propiedades Clave</div>
       <div class="benefits-list">${beneficiosHTML}</div>
     </div>
     <div class="modal-section">
-      <div class="modal-section-title">🌿 Dónde y cómo utilizarla</div>
+      <div class="modal-section-title"><span>🩺</span> Usos Principales</div>
       <ul class="uses-list">${usosHTML}</ul>
     </div>
     <div class="modal-section">
-      <div class="modal-section-title">📜 Recetas tradicionales</div>
+      <div class="modal-section-title"><span>🍳</span> Preparación Natural</div>
       ${recetasHTML}
     </div>
   `;
 
   overlay.classList.add('open');
   document.body.style.overflow = 'hidden';
-  modal.scrollTop = 0;
 }
 
 function closeModal() {
@@ -899,23 +688,11 @@ function closeModal() {
   document.body.style.overflow = '';
 }
 
+searchInput.addEventListener('input', (e) => renderPlantas(e.target.value));
 modalClose.addEventListener('click', closeModal);
-overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+overlay.addEventListener('click', (e) => { if(e.target === overlay) closeModal(); });
 
-searchInput.addEventListener('input', () => {
-  const q = searchInput.value.toLowerCase().trim();
-  if (!q) { buildGrid(plantas); return; }
-  const filtered = plantas.filter(p =>
-    p.nombre.toLowerCase().includes(q) ||
-    p.latin.toLowerCase().includes(q) ||
-    p.categoria.toLowerCase().includes(q) ||
-    p.desc.toLowerCase().includes(q)
-  );
-  buildGrid(filtered);
-});
-
-buildGrid(plantas);
+renderPlantas();
 </script>
 </body>
 </html>
